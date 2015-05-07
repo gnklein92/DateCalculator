@@ -1,0 +1,94 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".DatePickingActivity">
+
+    <Button android:id="@+id/btnDatePickerStart"
+    android:text="Choose Start Date"
+    style="@style/DTP.Button"/>
+
+    <Button android:id="@+id/btnDatePickerEnd"
+        android:text="Choose End Date"
+        style="@style/DTP.Button"
+        android:layout_below="@id/btnDatePickerStart"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnDatePickerEnd"
+        android:orientation="horizontal"
+        android:layout_marginTop="15dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/outputOptions">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_marginRight="40dp"
+
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Output"/>
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Days"/>
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Years"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+           >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Exclusions"/>
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Saturdays"/>
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sundays"/>
+            <CheckBox
+                android:id="@+id/chkCustomDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Custom Date"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/outputOptions"
+        android:orientation="vertical"
+        android:id="@+id/buttonygoodness">
+<Button
+    android:id="@+id/customDatebtn"
+    android:text="Choose Custom Date"
+    style="@style/DTP.Button"
+    android:visibility="invisible"
+    />
+
+    <Button
+        android:layout_marginTop="150dp"
+        android:id="@+id/calculateButton"
+        android:text="Calculate"
+        style="@style/Special.Button"
+        />
+
+</LinearLayout>
+
+</RelativeLayout>
