@@ -1,31 +1,29 @@
 package com.example.kennethfechter.datepicker;
 
-import android.opengl.Visibility;
-import android.support.v7.app.ActionBarActivity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.Switch;
-import android.widget.TextView;
 
 import com.android.datetimepicker.date.DatePickerDialog;
-import com.android.datetimepicker.time.RadialPickerLayout;
-import com.android.datetimepicker.time.TimePickerDialog;
+
 import java.text.DateFormat;
- import java.text.SimpleDateFormat;
  import java.util.Calendar;
- import java.util.Locale;
+import java.util.List;
+import java.util.Locale;
 
 
 
 public class DatePickingActivity extends Activity implements DatePickerDialog.OnDateSetListener{
 
+    public List<Calendar> customDates;
     private Calendar startCalendar;
     private Calendar endCalendar;
     private Calendar customCalendar;
@@ -37,7 +35,10 @@ public class DatePickingActivity extends Activity implements DatePickerDialog.On
     private Button calculateButton;
 
     private CheckBox customDate;
-
+    private CheckBox chkExcludeSaturdays;
+    private CheckBox chkExcludeSundays;
+    private CheckBox chkOutputYears;
+    private CheckBox chkExcludeDays;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,13 +49,23 @@ public class DatePickingActivity extends Activity implements DatePickerDialog.On
         endButton = (Button) findViewById(R.id.btnDatePickerEnd);
         customDateButton = (Button) findViewById(R.id.customDatebtn);
         calculateButton = (Button) findViewById(R.id.calculateButton);
+        customDate = (CheckBox) findViewById(R.id.chkCustomDate);
+        chkExcludeSaturdays = (CheckBox) findViewById(R.id.chkExcludeSaturdays);
+        chkExcludeSundays = (CheckBox) findViewById(R.id.chkExcludeSundays);
+        chkOutputYears = (CheckBox) findViewById(R.id.chkOutputYears);
+        chkExcludeDays = (CheckBox) findViewById(R.id.chkOutputDays);
+
+
         calculateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                calculateButton.setBackgroundColor(getResources().getColor(R.color.red));
+                CalculateDaysBetween();
             }
         });
-        endCalendar = customCalendar = startCalendar = Calendar.getInstance();
+        endCalendar = Calendar.getInstance();
+        customCalendar = Calendar.getInstance();
+        startCalendar = Calendar.getInstance();
+
         dateFormat = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault());
         customDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +80,6 @@ public class DatePickingActivity extends Activity implements DatePickerDialog.On
                 }, customCalendar.get(Calendar.YEAR), customCalendar.get(Calendar.MONTH), customCalendar.get(Calendar.DAY_OF_MONTH)).show(getFragmentManager(), "datePicker");            }
         });
 
-        customDate = (CheckBox) findViewById(R.id.chkCustomDate);
         customDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,6 +119,74 @@ public class DatePickingActivity extends Activity implements DatePickerDialog.On
                 }, endCalendar.get(Calendar.YEAR), endCalendar.get(Calendar.MONTH), endCalendar.get(Calendar.DAY_OF_MONTH)).show(getFragmentManager(), "datePicker");
             }
         });
+    }
+
+    private void CalculateDaysBetween() {
+        int totalSaturdays = 0;
+        int totalSundays = 0;
+
+        Calendar endCalInstance = Calendar.getInstance();
+        Calendar startCalInstance = Calendar.getInstance();
+        endCalInstance.setTime(endCalendar.getTime());
+        startCalInstance.setTime(startCalendar.getTime());
+
+
+        if(endCalendar.getTimeInMillis() < startCalendar.getTimeInMillis())
+        {
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(DatePickingActivity.this);
+            builder1.setMessage("Start date must occur before end date.");
+            builder1.setCancelable(true);
+            builder1.setPositiveButton("Ok",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert11 = builder1.create();
+            alert11.show();
+        }
+        else
+        {
+            while(startCalInstance.getTimeInMillis() < endCalInstance.getTimeInMillis()){
+                startCalInstance.add(Calendar.DAY_OF_WEEK,1);
+                if(startCalInstance.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY){
+                    ++totalSaturdays;
+                }
+            }
+
+            Calendar endCalInstance2 = Calendar.getInstance();
+            Calendar startCalInstance2 = Calendar.getInstance();
+            endCalInstance2.setTime(endCalendar.getTime());
+            startCalInstance2.setTime(startCalendar.getTime());
+
+            while(startCalInstance2.getTimeInMillis() < endCalInstance2.getTimeInMillis()){
+                startCalInstance2.add(Calendar.DAY_OF_WEEK,1);
+                if(startCalInstance2.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY){
+                    ++totalSundays;
+                }
+            }
+
+            long intervalmillis = endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis();
+            // int days = (int) ((intervalmillis / (1000*60*60*24)) % 7);
+            int years = (int) ((intervalmillis / (1000*60*60*24*7))/52);
+
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(DatePickingActivity.this);
+            builder1.setMessage("Calculated interval is: " + years + "years");
+            builder1.setCancelable(true);
+            builder1.setPositiveButton("Calculate Again",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            ResetInterface();
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert11 = builder1.create();
+            alert11.show();
+
+        }
+    }
+
+    private void ResetInterface() {
     }
 
     @Override

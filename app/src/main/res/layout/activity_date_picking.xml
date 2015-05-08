@@ -34,10 +34,12 @@
                 android:text="Output"/>
 
             <CheckBox
+                android:id="@+id/chkOutputDays"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Days"/>
             <CheckBox
+                android:id="@+id/chkOutputYears"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Years"/>
@@ -54,10 +56,12 @@
                 android:text="Exclusions"/>
 
             <CheckBox
+                android:id="@+id/chkExcludeSaturdays"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Saturdays"/>
             <CheckBox
+                android:id="@+id/chkExcludeSundays"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sundays"/>
